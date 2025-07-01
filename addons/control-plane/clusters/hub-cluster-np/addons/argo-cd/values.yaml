@@ -1,0 +1,25 @@
+configs:
+  cm:
+    url: https://example.com
+    dex.config: |
+      logger:
+        level: debug
+        format: json
+      connectors:
+      - type: saml
+        id: aws
+        name: "AWS IAM Identity Center"
+        config:
+          # You need value of Identity Center APP SAML (IAM Identity Center sign-in URL)
+          ssoURL: <url>
+          caData: <caData>
+          # Path to mount the secret to the dex container
+          entityIssuer: https://example.com/api/dex/callback
+          redirectURI:  https://example.com/api/dex/callback
+          usernameAttr: email
+          emailAttr: email
+          groupsAttr: groups
+  rbac:
+    policy.csv: |
+        g, <id>, role:admin
+    scopes: '[groups, email]'
