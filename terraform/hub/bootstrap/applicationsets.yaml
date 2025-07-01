@@ -19,7 +19,7 @@ spec:
       project: default
       source:
         repoURL: '{{.metadata.annotations.fleet_repo_url}}'
-        path: '{{.metadata.annotations.fleet_repo_basepath}}/{{.metadata.annotations.fleet_repo_path}}'
+        path: '{{.metadata.annotations.fleet_repo_basepath}}/{{.metadata.annotations.fleet_repo_path}}/{{.name}}'
         targetRevision: '{{.metadata.annotations.fleet_repo_revision}}'
         directory:
           recurse: false
