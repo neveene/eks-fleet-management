@@ -5,7 +5,7 @@
 argocd:
   namespace: argocd
 
-chartRepo: "471112582304.dkr.ecr.eu-west-2.amazonaws.com"
+chartRepo: "1234567890.dkr.ecr.eu-west-2.amazonaws.com"
 
 # Bootstrap ApplicationSets Configuration
 # These replace the files in fleet/bootstrap/
