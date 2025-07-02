@@ -10,7 +10,8 @@ resource "aws_efs_file_system" "efs-eks" {
 }
 
 resource "aws_efs_mount_target" "efs-eks" {
-  for_each        = { for sub_id in data.aws_subnets.private_subnets.ids : sub_id => sub_id if local.enable_efs }
+  for_each = local.enable_efs ? toset(data.aws_subnets.private_subnets.ids) : []
+  # for_each        = { for sub_id in data.aws_subnets.private_subnets.ids : sub_id => sub_id if local.enable_efs }
   file_system_id  = aws_efs_file_system.efs-eks[0].id
   subnet_id       = each.value
   security_groups = [module.eks.node_security_group_id, module.eks.cluster_security_group_id]

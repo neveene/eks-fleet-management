@@ -29,25 +29,22 @@ resource "kubernetes_secret" "git_secrets" {
   depends_on = [kubernetes_namespace.argocd]
   for_each = {
     git-addons = {
-      type                    = "git"
-      url                     = local.gitops_addons_repo_url
-      githubAppID             = base64decode(local.git_data["github_app_id"])
-      githubAppInstallationID = base64decode(local.git_data["github_app_installation_id"])
-      githubAppPrivateKey     = base64decode(local.git_data["github_private_key"])
+      type                  = base64decode(local.git_data["type"])
+      url                   = base64decode(local.git_data["url"])
+      username              = base64decode(local.git_data["username"])
+      password              = base64decode(local.git_data["password"])
     }
     git-fleet = {
-      type                    = "git"
-      url                     = local.gitops_fleet_repo_url
-      githubAppID             = base64decode(local.git_data["github_app_id"])
-      githubAppInstallationID = base64decode(local.git_data["github_app_installation_id"])
-      githubAppPrivateKey     = base64decode(local.git_data["github_private_key"])
+      type                  = base64decode(local.git_data["type"])
+      url                   = base64decode(local.git_data["url"])
+      username              = base64decode(local.git_data["username"])
+      password              = base64decode(local.git_data["password"])
     }
     git-resources = {
-      type                    = "git"
-      url                     = local.gitops_resources_repo_url
-      githubAppID             = base64decode(local.git_data["github_app_id"])
-      githubAppInstallationID = base64decode(local.git_data["github_app_installation_id"])
-      githubAppPrivateKey     = base64decode(local.git_data["github_private_key"])
+      type                  = base64decode(local.git_data["type"])
+      url                   = base64decode(local.git_data["url"])
+      username              = base64decode(local.git_data["username"])
+      password              = base64decode(local.git_data["password"])
     }
     argocd-bitnami = {
       type      = "helm"

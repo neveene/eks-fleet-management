@@ -1,5 +1,14 @@
 locals {
-  account_config          = var.accounts_config[terraform.workspace]
+
+  account_id = "058264385461"
+  ###VPC config###
+  vpc_name = "eks_hub_vpc"
+  vpc_cidr = "10.1.0.0/16"
+  secondary_vpc_cidr = "100.64.0.0/16"
+  azs =  slice(data.aws_availability_zones.available.names, 0, 3)
+
+  ### ###
+  # account_config          = var.accounts_config[terraform.workspace]
   cluster_name            = var.cluster_name
   cluster_info            = module.eks
   enable_automode         = var.enable_automode

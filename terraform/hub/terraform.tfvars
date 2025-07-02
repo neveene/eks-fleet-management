@@ -1,0 +1,39 @@
+vpc_name                = "hub-live"
+kubernetes_version      = "1.32"
+cluster_name            = "hub-cluster-live"
+cross_account_role_name = "cross-account-role"
+environment             = "live"
+appSetFileName          = "fleetManagement"
+# Git repositories
+git_org_name                    = ""
+gitops_addons_repo_name         = "eks-fleet-management"
+gitops_addons_repo_base_path    = "addons"
+gitops_addons_repo_path         = "bootstrap"
+gitops_addons_repo_revision     = "main"
+gitops_fleet_repo_name          = "eks-fleet-management"
+gitops_fleet_repo_base_path     = "fleet"
+gitops_fleet_repo_path          = "bootstrap"
+gitops_fleet_repo_revision      = "main"
+gitops_resources_repo_name      = "eks-fleet-management"
+gitops_resources_repo_base_path = "resources"
+gitops_resources_repo_path      = "bootstrap"
+gitops_resources_repo_revision  = "main"
+fleet_member                    = "hub-cluster"
+# Tenancy of the hub cluster
+tenant = "control-plane"
+# Github app creds
+git_creds_secret            = "hubsecret"
+enable_ack_pod_identity     = false
+enable_automode             = true
+aws_resources = {
+  enable_aws_cloudwatch_observability = true
+  enable_cni_metrics_helper           = true
+  enable_metrics_server               = true
+  enable_external_secrets             = true
+  enable_argocd                       = true
+  enable_ack_iam                      = true
+  enable_ack_eks                      = true
+  enable_aws_load_balancer_controller = true
+  enable_external_dns                 = true
+  enable_argocd_ingress               = true
+}

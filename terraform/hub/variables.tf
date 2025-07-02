@@ -24,12 +24,12 @@ variable "ecr_account" {
   default     = ""
 }
 
-variable "accounts_config" {
-  description = "Map of objects for per environment configuration"
-  type = map(object({
-    account_id = string
-  }))
-}
+# variable "accounts_config" {
+#   description = "Map of objects for per environment configuration"
+#   type = map(object({
+#     account_id = string
+#   }))
+# }
 
 variable "kms_key_admin_roles" {
   description = "list of role ARNs to add to the KMS policy"

@@ -21,12 +21,12 @@ variable "vpc_name" {
   type        = string
 }
 
-variable "accounts_config" {
-  description = "Map of objects for per environment configuration"
-  type = map(object({
-    account_id = string
-  }))
-}
+# variable "accounts_config" {
+#   description = "Map of objects for per environment configuration"
+#   type = map(object({
+#     account_id = string
+#   }))
+# }
 
 ################################################################################
 # Cluster Realted Variables

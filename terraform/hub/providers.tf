@@ -13,7 +13,7 @@ provider "helm" {
         "get-token",
         "--cluster-name", local.cluster_info.cluster_name,
         "--region", local.region,
-        "--role-arn", "arn:aws:iam::${local.account_config.account_id}:role/cross-account-role"
+        "--role-arn", "arn:aws:iam::${local.account_id}:role/cross-account-role"
       ]
     }
   }
@@ -32,7 +32,7 @@ provider "kubernetes" {
       "get-token",
       "--cluster-name", local.cluster_info.cluster_name,
       "--region", local.region,
-      "--role-arn", "arn:aws:iam::${local.account_config.account_id}:role/cross-account-role"
+      "--role-arn", "arn:aws:iam::${local.account_id}:role/cross-account-role"
     ]
   }
 }
@@ -40,12 +40,12 @@ provider "kubernetes" {
 provider "aws" {
   region = "eu-west-2"
   assume_role {
-    role_arn     = "arn:aws:iam::${local.account_config.account_id}:role/cross-account-role"
+    role_arn     = "arn:aws:iam::${local.account_id}:role/cross-account-role"
     session_name = "cross-account"
   }
 }
 
-terraform {
-  backend "s3" {
-  }
-}
+# terraform {
+#   backend "s3" {
+#   }
+# }

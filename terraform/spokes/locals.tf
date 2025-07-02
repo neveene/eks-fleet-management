@@ -3,7 +3,7 @@ locals {
   enable_ack_pod_identity = var.enable_ack_pod_identity
   hub_cluster_name        = var.hub_cluster_name
   enable_automode         = var.enable_automode
-  account_config          = var.accounts_config[terraform.workspace]
+  # account_config          = var.accounts_config[terraform.workspace]
   cluster_name            = "spoke-${terraform.workspace}"
   fleet_member            = "spoke"
   environment             = terraform.workspace
