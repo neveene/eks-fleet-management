@@ -1,0 +1,6 @@
+ingressClass:
+  scheme: internet-facing
+ingress:
+  useExternalDns: true
+argoService:
+  argoServerSericeName: fleet-argocd-server

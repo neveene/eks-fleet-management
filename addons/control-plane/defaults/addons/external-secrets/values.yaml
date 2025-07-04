@@ -9,3 +9,4 @@ certController:
 webhook:
   tolerations:
     - key: CriticalAddonsOnly
+      operator: "Exists"

@@ -1,5 +1,0 @@
-enableIngress: "true"
-ingressClass:
-  scheme: internet-facing
-ingress:
-  useExternalDns: true

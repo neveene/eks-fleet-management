@@ -1,0 +1,2 @@
+podIdentityRole:
+  permissionsBoundary: "spoke-dev-workload1-ack-bountries"
