@@ -125,7 +125,7 @@ spec:
             ignoreMissingValueFiles: true
             valuesObject:
               namespace: '{{.values.platformTeamNamespace}}'
-              useSelectors: false
+              useSelectors: true
               useVersionSelectors: '{{.values.useVersionSelectors}}'
             # Defining the way to group monitoring This application set will handly monitoring and ACK values
               mergeValues:
