@@ -93,11 +93,11 @@ variable "remote_spoke_secret" {
   default     = false
 }
 
-variable "amp_prometheus_crossaccount_role" {
-  description = "Adot Role in the App tooling account that will allow to connect with prometheus"
-  type        = string
-  default     = ""
-}
+# variable "amp_prometheus_crossaccount_role" {
+#   description = "Adot Role in the App tooling account that will allow to connect with prometheus"
+#   type        = string
+#   default     = ""
+# }
 
 variable "environment_prefix" {
   description = "Prefix for different workspace envrironments"

@@ -1,8 +1,17 @@
 locals {
+
+    ###VPC config###
+  vpc_name = var.vpc_name
+  vpc_cidr = "10.2.0.0/16"
+  secondary_vpc_cidr = "100.64.0.0/16"
+  azs =  slice(data.aws_availability_zones.available.names, 0, 3)
+  enable_efs              = false
+  #########
   cluster_info            = module.eks
   enable_ack_pod_identity = var.enable_ack_pod_identity
   hub_cluster_name        = var.hub_cluster_name
   enable_automode         = var.enable_automode
+  account_id = "058264385461"
   # account_config          = var.accounts_config[terraform.workspace]
   cluster_name            = "spoke-${terraform.workspace}"
   fleet_member            = "spoke"
@@ -96,11 +105,11 @@ locals {
     },
     {
       # Opensource monitoring
-      amp_endpoint_url                 = try(data.aws_ssm_parameter.amp_endpoint[0].value, "")
-      amp_arn                          = try(data.aws_ssm_parameter.amp_arn[0].value, "")
+      # amp_endpoint_url                 = try(data.aws_ssm_parameter.amp_endpoint[0].value, "")
+      # amp_arn                          = try(data.aws_ssm_parameter.amp_arn[0].value, "")
       amp_prometheus_namespace         = try(local.amp_prometheus.namespace, "")
       amp_prometheus_serviceaccount    = try(local.amp_prometheus.service_account, "")
-      amp_prometheus_crossaccount_role = try(var.amp_prometheus_crossaccount_role, "")
+      # amp_prometheus_crossaccount_role = try(var.amp_prometheus_crossaccount_role, "")
     }
   )
 

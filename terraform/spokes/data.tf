@@ -11,7 +11,7 @@ data "aws_iam_session_context" "current" {
 }
 
 data "aws_iam_roles" "eks_admin_role" {
-  name_regex = "AWSReservedSSO_AdministratorAccess_.*"
+  name_regex = "Admin*"
 }
 
 data "aws_vpc" "vpc" {
@@ -19,6 +19,7 @@ data "aws_vpc" "vpc" {
     name   = "tag:Name"
     values = ["${var.vpc_name}"]
   }
+  depends_on = [ module.vpc ]
 }
 
 data "aws_subnets" "intra_subnets" {

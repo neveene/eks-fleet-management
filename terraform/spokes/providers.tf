@@ -40,7 +40,7 @@ provider "kubernetes" {
 provider "aws" {
   region = "eu-west-2"
   assume_role {
-    role_arn     = "arn:aws:iam::${local.account_config.account_id}:role/cross-account-role"
+    role_arn     = "arn:aws:iam::${local.account_id}:role/cross-account-role"
     session_name = "cross-account"
   }
 }
@@ -49,14 +49,10 @@ provider "aws" {
   alias  = "shared-services"
   region = "eu-west-2"
   assume_role {
-    role_arn     = "arn:aws:iam::471112582304:role/cross-account-role"
+    role_arn     = "arn:aws:iam::${local.account_id}:role/cross-account-role"
     session_name = "shared-shervices"
   }
 }
 
-terraform {
-  backend "s3" {
-  }
-}
 
 
