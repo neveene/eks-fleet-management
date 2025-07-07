@@ -17,8 +17,8 @@ syncPolicyAppSet:
 ackPodIdentity:
   path: "charts/pod-identity"
 # If we Define the Merge we will use the values files included in the folder values. That will enable us to have default helm charts
-useSelectors: false
-useVersionSelectors: true
+useSelectors: "false"
+useVersionSelectors: "true"
 # mergeValues:
 #   addons: 
 #     use: true
