@@ -5,7 +5,7 @@ cross_account_role_name = "cross-account-role"
 environment             = "live"
 appSetFileName          = "fleetManagement"
 # Git repositories
-git_org_name                    = ""
+git_org_name                    = "neveene"
 gitops_addons_repo_name         = "eks-fleet-management"
 gitops_addons_repo_base_path    = "addons"
 gitops_addons_repo_path         = "bootstrap"

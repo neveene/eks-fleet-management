@@ -30,19 +30,19 @@ resource "kubernetes_secret" "git_secrets" {
   for_each = {
     git-addons = {
       type                  = base64decode(local.git_data["type"])
-      url                   = base64decode(local.git_data["url"])
+      url                   = "https://github.com/neveene/eks-fleet-management"
       username              = base64decode(local.git_data["username"])
       password              = base64decode(local.git_data["password"])
     }
     git-fleet = {
       type                  = base64decode(local.git_data["type"])
-      url                   = base64decode(local.git_data["url"])
+      url                   = "https://github.com/neveene/eks-fleet-management"
       username              = base64decode(local.git_data["username"])
       password              = base64decode(local.git_data["password"])
     }
     git-resources = {
       type                  = base64decode(local.git_data["type"])
-      url                   = base64decode(local.git_data["url"])
+      url                   = "https://github.com/neveene/eks-fleet-management"
       username              = base64decode(local.git_data["username"])
       password              = base64decode(local.git_data["password"])
     }

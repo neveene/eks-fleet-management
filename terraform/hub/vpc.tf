@@ -50,17 +50,11 @@ resource "aws_nat_gateway" "private_nat" {
   subnet_id         = try(module.vpc[0].private_subnets[0], "")
 }
 
-# resource "aws_ec2_transit_gateway_vpc_attachment" "this" {
-#   count = local.vpc_name != "" && local.transit_gateway_id != "" ? 1 : 0
-
-#   subnet_ids         = try(module.vpc[0].private_subnets, [])
-#   transit_gateway_id = local.transit_gateway_id
-#   vpc_id             = try(module.vpc[0].vpc_id, "")
-
-#   transit_gateway_default_route_table_association = true
-#   transit_gateway_default_route_table_propagation = true
-
-#   tags = {
-#     Name = "TGW VPC Attachment for ${try(module.vpc[0].vpc_id, "")}"
-#   }
+#route for intra subnets
+# resource "aws_route" "intra_subnets_default_gateway" {
+#   count                  = local.vpc_name != "" ? 1 : 0
+#   route_table_id         = try(module.vpc[0].intra_route_table_ids[0], "")
+#   destination_cidr_block = "0.0.0.0/0"
+#   nat_gateway_id         = try(aws_nat_gateway.private_nat[0].id, "")
+#   depends_on             = [aws_nat_gateway.private_nat]
 # }
