@@ -70,7 +70,10 @@ bootstrap:
       mergeValues:
         monitoring: 
           use: true
-
+    newAppset:
+      mergeValues:
+        newmonitoring: 
+          use: true
 # Fleet Bootstrap Configuration
 # These replace the logic in fleet/fleet-bootstrap/
 fleetBootstrap:

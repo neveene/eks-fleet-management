@@ -35,6 +35,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- if .Values.commonLabels }}
+{{- toYaml .Values.commonLabels | nindent 0 }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -44,5 +47,18 @@ Common Helm and Kubernetes Annotations
 helm.sh/chart: {{ include "application-sets.chart" . }}
 {{- if .Values.annotations }}
 {{ toYaml .Values.annotations }}
+{{- end }}
+{{- end }}
+
+{{/*
+Merge common labels from global and chart-specific configurations
+Usage: {{ $mergedLabels := include "application-sets.mergeCommonLabels" (dict "global" .Values.commonLabels "chart" $chartConfig.commonLabels) | fromYaml }}
+*/}}
+{{- define "application-sets.mergeCommon" -}}
+{{- $global := .global | default dict }}
+{{- $chart := .chart | default dict }}
+{{- $merged := mergeOverwrite $global $chart }}
+{{- if $merged }}
+{{- toYaml $merged }}
 {{- end }}
 {{- end }}

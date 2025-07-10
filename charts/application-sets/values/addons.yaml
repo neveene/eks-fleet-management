@@ -4,7 +4,7 @@ argocd:
   chartName: argo-cd
   namespace: argocd
   releaseName: argocd
-  defaultVersion: "7.7.8"
+  defaultVersion: "8.1.2"
   chartRepository: "https://argoproj.github.io/argo-helm"
   additionalResources:
     path: "charts/argocd-ingress"

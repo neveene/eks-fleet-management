@@ -1,3 +1,13 @@
+# Common labels to be applied to all ApplicationSet-generated Applications and resources
+# commonLabels:
+#   app.kubernetes.io/part-of: "fleet-management"
+#   managed-by: "gitops-fleet-management"
+#   team: "platform"
+
+# commonAnnotations:
+#   contact: "platform-team@company.com"
+#   managed-by: "gitops-fleet-management"
+
 syncPolicy:
   automated:
     selfHeal: false
@@ -17,10 +27,10 @@ syncPolicyAppSet:
 ackPodIdentity:
   path: "charts/pod-identity"
 # If we Define the Merge we will use the values files included in the folder values. That will enable us to have default helm charts
-useSelectors: false
-useVersionSelectors: true
+useSelectors: "false"
+useVersionSelectors: "true"
 # mergeValues:
-#   addons: 
+#   test: 
 #     use: true
 # globalSelectors:
 #   fleet_member: spoke

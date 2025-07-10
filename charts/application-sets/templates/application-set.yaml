@@ -18,6 +18,9 @@
 {{- $argoProjectName := (default "default" .Values.argoProjectName ) -}}
 {{- $applyNestedSelectors := default "false" .Values.applyNestedSelectors -}}
 {{- $templatePatch := .Values.templatePatch -}}
+{{- $commonLabels := .Values.commonLabels -}}
+{{- $commonAnnotations := .Values.commonAnnotations -}}
+
 
 {{/* Merge values From Default */}}
 {{- if .Values.mergeValues -}}
@@ -187,10 +190,7 @@ spec:
         helm:
           releaseName: {{ default "{{ .values.addonChart }}" $chartConfig.releaseName | squote }}
           ignoreMissingValueFiles: true
-          {{- if $chartConfig.valuesObject }}
-          valuesObject:
-          {{- $chartConfig.valuesObject | toYaml | nindent 12 }}
-          {{- end }}
+          {{- include "application-sets.valuesObject" (dict "commonLabels" $commonLabels "commonAnnotations" $commonAnnotations "chartConfig" $chartConfig) }}
           {{- if $valueFiles }}
           valueFiles:
           {{- include "application-sets.valueFiles" (dict 

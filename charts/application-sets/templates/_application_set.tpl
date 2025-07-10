@@ -64,3 +64,26 @@ Define the values path for reusability
 {{- end }}
 {{- end }}
 {{- end }}
+
+{{/*
+Generate valuesObject section with merged common labels and annotations
+Usage: {{ include "application-sets.valuesObject" (dict "commonLabels" .Values.commonLabels "commonAnnotations" .Values.commonAnnotations "chartConfig" $chartConfig) }}
+*/}}
+{{- define "application-sets.valuesObject" -}}
+{{- $mergedLabels := include "application-sets.mergeCommon" (dict "global" .commonLabels "chart" .chartConfig.commonLabels) | fromYaml }}
+{{- $mergedAnnotations := include "application-sets.mergeCommon" (dict "global" .commonAnnotations "chart" .chartConfig.commonAnnotations) | fromYaml }}
+{{- if or .chartConfig.valuesObject $mergedLabels $mergedAnnotations }}
+          valuesObject:
+{{- if $mergedLabels }}
+            commonLabels:
+              {{- toYaml $mergedLabels | nindent 14 }}
+{{- end }}
+{{- if $mergedAnnotations }}
+            commonAnnotations:
+              {{- toYaml $mergedAnnotations | nindent 14 }}
+{{- end }}
+{{- if .chartConfig.valuesObject }}
+          {{- .chartConfig.valuesObject | toYaml | nindent 12 }}
+{{- end }}
+{{- end }}
+{{- end }}
