@@ -25,9 +25,17 @@ Template to generate additional resources configuration
 {{- if $chartConfig.additionalResources.helm }}
   helm:
     releaseName: '{{`{{ .name }}`}}-{{ $chartConfig.additionalResources.helm.releaseName }}'
+    {{- if or $values.globalValuesObject $chartConfig.additionalResources.helm.valuesObject }}
+    {{/* Create a fresh copy for this component only */}}
+    {{- $chartValuesObject := dict }}
+    {{- if $values.globalValuesObject }}
+      {{- $chartValuesObject = deepCopy $values.globalValuesObject }}
+    {{- end }}
     {{- if $chartConfig.additionalResources.helm.valuesObject }}
+      {{- $chartValuesObject = mergeOverwrite $chartValuesObject $chartConfig.additionalResources.helm.valuesObject }}
+    {{- end }}
     valuesObject:
-    {{- $chartConfig.additionalResources.helm.valuesObject | toYaml | nindent 6 }}
+      {{- toYaml $chartValuesObject | nindent 12 }}
     {{- end }}
     ignoreMissingValueFiles: true
     valueFiles:
@@ -38,7 +46,6 @@ Template to generate additional resources configuration
       "chartType" $additionalResourcesType) | nindent 6 }}
 {{- end }}
 {{- end }}
-
 
 {{/*
 Define the values path for reusability
@@ -61,29 +68,6 @@ Define the values path for reusability
 {{- if $chartType -}}/{{$chartType}}{{- end -}}
 {{- if $chartConfig.valuesFileName -}}/{{$chartConfig.valuesFileName}}
 {{- else -}}/values.yaml{{- end -}}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Generate valuesObject section with merged common labels and annotations
-Usage: {{ include "application-sets.valuesObject" (dict "commonLabels" .Values.commonLabels "commonAnnotations" .Values.commonAnnotations "chartConfig" $chartConfig) }}
-*/}}
-{{- define "application-sets.valuesObject" -}}
-{{- $mergedLabels := include "application-sets.mergeCommon" (dict "global" .commonLabels "chart" .chartConfig.commonLabels) | fromYaml }}
-{{- $mergedAnnotations := include "application-sets.mergeCommon" (dict "global" .commonAnnotations "chart" .chartConfig.commonAnnotations) | fromYaml }}
-{{- if or .chartConfig.valuesObject $mergedLabels $mergedAnnotations }}
-          valuesObject:
-{{- if $mergedLabels }}
-            commonLabels:
-              {{- toYaml $mergedLabels | nindent 14 }}
-{{- end }}
-{{- if $mergedAnnotations }}
-            commonAnnotations:
-              {{- toYaml $mergedAnnotations | nindent 14 }}
-{{- end }}
-{{- if .chartConfig.valuesObject }}
-          {{- .chartConfig.valuesObject | toYaml | nindent 12 }}
 {{- end }}
 {{- end }}
 {{- end }}

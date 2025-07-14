@@ -13,6 +13,7 @@
 {{- $repoURLGitRevision := .Values.repoURLGitRevision -}}
 {{- $repoURLGitBasePath := .Values.repoURLGitBasePath -}}
 {{- $valueFiles := .Values.valueFiles -}}
+{{- $globalValuesObject := .Values.globalValuesObject | default dict -}}
 {{- $valuesFilePrefix :=  .Values.valuesFilePrefix -}}
 {{- $useValuesFilePrefix := (default false .Values.useValuesFilePrefix )  -}}
 {{- $argoProjectName := (default "default" .Values.argoProjectName ) -}}
@@ -190,7 +191,18 @@ spec:
         helm:
           releaseName: {{ default "{{ .values.addonChart }}" $chartConfig.releaseName | squote }}
           ignoreMissingValueFiles: true
-          {{- include "application-sets.valuesObject" (dict "commonLabels" $commonLabels "commonAnnotations" $commonAnnotations "chartConfig" $chartConfig) }}
+          {{- if or $globalValuesObject $chartConfig.valuesObject }}
+          {{/* Create a fresh copy for this component only */}}
+          {{- $chartValuesObject := dict }}
+          {{- if $globalValuesObject }}
+            {{- $chartValuesObject = deepCopy $globalValuesObject }}
+          {{- end }}
+          {{- if $chartConfig.valuesObject }}
+            {{- $chartValuesObject = mergeOverwrite $chartValuesObject $chartConfig.valuesObject }}
+          {{- end }}
+          valuesObject:
+            {{- toYaml $chartValuesObject | nindent 12 }}
+          {{- end }}
           {{- if $valueFiles }}
           valueFiles:
           {{- include "application-sets.valueFiles" (dict 
