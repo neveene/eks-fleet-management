@@ -1,4 +1,4 @@
-{{- if and (.Values.create | default false) (.Values.podIdentityPolicyCreate | default false) }}
+{{- if and (.Values.create | default false) (or (.Values.podIdentityPolicyCreate | default false) (.Values.adoption.enabled | default false)) }}
 apiVersion: iam.services.k8s.aws/v1alpha1
 kind: Policy
 metadata:
@@ -24,7 +24,11 @@ spec:
             {{- end }}
           ],
           "Resource": [
-            {{- if $policy.customArn }}
+            {{- if kindIs "slice" $policy.customArn }}
+            {{- range $i, $arn := $policy.customArn }}
+            "{{ $arn }}"{{ if not (eq (add $i 1) (len $policy.customArn)) }},{{ end }}
+            {{- end }}
+            {{- else if $policy.customArn }}
             "{{ $policy.customArn }}"
             {{- else if eq $policy.resourceName "*" }}
             "*"
@@ -52,5 +56,6 @@ spec:
   {{- if .Values.podIdentityPolicy.tags }}
   tags:
     {{- .Values.podIdentityPolicy.tags | toYaml | nindent 10 }}
+  {{- end }}
   {{- end }}
 {{- end }}
