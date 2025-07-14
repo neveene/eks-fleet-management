@@ -57,5 +57,4 @@ spec:
   tags:
     {{- .Values.podIdentityPolicy.tags | toYaml | nindent 10 }}
   {{- end }}
-  {{- end }}
 {{- end }}
