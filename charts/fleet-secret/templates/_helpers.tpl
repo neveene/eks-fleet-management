@@ -60,3 +60,16 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Merge Global Values with Cluster Specific to give more flexibility
+Usage: {{ $merge := include "fleet-secret.mergeCommon" (dict "global" .Values.global.someConfig "cluster" .Values.someConfig) | fromYaml }}
+*/}}
+{{- define "fleet-secret.mergeCommon" -}}
+{{- $global := .global | default dict }}
+{{- $cluster := .cluster | default dict }}
+{{- $merged := mergeOverwrite $global $cluster }}
+{{- if $merged }}
+{{- toYaml $merged }}
+{{- end }}
+{{- end }}
