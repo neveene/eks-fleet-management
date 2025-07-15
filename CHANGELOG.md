@@ -1,7 +1,5 @@
 # Changelog
 
-## [Unreleased]
-
 ## [0.0.8] - 2025-01-15
 
 ### Added
