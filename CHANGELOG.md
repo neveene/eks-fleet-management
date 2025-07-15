@@ -17,7 +17,7 @@
 
 ### Technical Details
 
-- Added template logic for dynamic repository URL selection:
+- Added template logic for dynamic repository URL selection in fleet/bootstrap application sets:
   ```yaml
   {{- else }}
     - repoURL: '{{default (index .metadata.annotations "chartRepoUrl") (index . "chartRepoUrl") }}'
