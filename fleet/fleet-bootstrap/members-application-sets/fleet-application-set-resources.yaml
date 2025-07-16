@@ -137,9 +137,6 @@ spec:
           helm:
             ignoreMissingValueFiles: true
             valuesObject:
-              repoURLGit: '{{.metadata.annotations.resources_repo_url}}'
-              repoURLGitRevision: '{{.metadata.annotations.resources_repo_revision}}'
-              repoURLGitBasePath: '{{.metadata.annotations.resources_repo_basepath}}'
               namespace: '{{.values.platformTeamNamespace}}'
               useSelectors: '{{.values.useSelectors}}'
               useVersionSelectors: '{{.values.useVersionSelectors}}'

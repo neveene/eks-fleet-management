@@ -135,9 +135,6 @@ spec:
           helm:
             ignoreMissingValueFiles: true
             valuesObject:
-              repoURLGit: '{{.metadata.annotations.addons_repo_url}}'
-              repoURLGitRevision: '{{.metadata.annotations.addons_repo_revision}}'
-              repoURLGitBasePath: '{{.metadata.annotations.addons_repo_basepath}}'
               useSelectors: '{{.values.useSelectors}}'
               useVersionSelectors: '{{.values.useVersionSelectors}}'
               applicationSetGroup: {{.values.applicationSetGroup}}
