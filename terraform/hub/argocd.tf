@@ -82,30 +82,6 @@ resource "aws_ssm_parameter" "argocd_hub_role" {
   type  = "String"
   value = module.argocd_hub_pod_identity.iam_role_arn
 }
-################################################################################
-# GitOps Bridge: Bootstrap
-################################################################################
-module "gitops_bridge_bootstrap" {
-  source  = "gitops-bridge-dev/gitops-bridge/helm"
-  version = "0.1.0"
-  cluster = {
-    cluster_name = module.eks.cluster_name
-    environment  = local.environment
-    metadata     = local.addons_metadata
-    addons       = local.addons
-  }
-
-  apps = local.argocd_apps
-  argocd = {
-    name             = "argocd"
-    namespace        = local.argocd_namespace
-    chart_version    = "7.7.8"
-    values           = [file("${path.module}/argocd-initial-values.yaml")]
-    timeout          = 600
-    create_namespace = false
-  }
-  depends_on = [kubernetes_secret.git_secrets]
-}
 
 ################################################################################
 # Creating the Secret to have the same logic of enabling addons from the argo code 
@@ -132,4 +108,104 @@ resource "aws_secretsmanager_secret_version" "hub_cluster_secret_version" {
       },
     }
   })
+}
+
+################################################################################
+# Install ArgoCD
+################################################################################
+resource "helm_release" "argocd" {
+  name             = try(local.argocd.name, "argo-cd")
+  description      = try(local.argocd.description, "A Helm chart to install the ArgoCD")
+  namespace        = try(local.argocd.namespace, "argocd")
+  create_namespace = try(local.argocd.create_namespace, true)
+  chart            = try(local.argocd.chart, "argo-cd")
+  version          = try(local.argocd.chart_version, "6.6.0")
+  repository       = try(local.argocd.repository, "https://argoproj.github.io/argo-helm")
+  values           = try(local.argocd.values, [])
+
+  timeout                    = try(local.argocd.timeout, null)
+  repository_key_file        = try(local.argocd.repository_key_file, null)
+  repository_cert_file       = try(local.argocd.repository_cert_file, null)
+  repository_ca_file         = try(local.argocd.repository_ca_file, null)
+  repository_username        = try(local.argocd.repository_username, null)
+  repository_password        = try(local.argocd.repository_password, null)
+  devel                      = try(local.argocd.devel, null)
+  verify                     = try(local.argocd.verify, null)
+  keyring                    = try(local.argocd.keyring, null)
+  disable_webhooks           = try(local.argocd.disable_webhooks, null)
+  reuse_values               = try(local.argocd.reuse_values, null)
+  reset_values               = try(local.argocd.reset_values, null)
+  force_update               = try(local.argocd.force_update, null)
+  recreate_pods              = try(local.argocd.recreate_pods, null)
+  cleanup_on_fail            = try(local.argocd.cleanup_on_fail, null)
+  max_history                = try(local.argocd.max_history, null)
+  atomic                     = try(local.argocd.atomic, null)
+  skip_crds                  = try(local.argocd.skip_crds, null)
+  render_subchart_notes      = try(local.argocd.render_subchart_notes, null)
+  disable_openapi_validation = try(local.argocd.disable_openapi_validation, null)
+  wait                       = try(local.argocd.wait, true)
+  wait_for_jobs              = try(local.argocd.wait_for_jobs, null)
+  dependency_update          = try(local.argocd.dependency_update, null)
+  replace                    = try(local.argocd.replace, null)
+  lint                       = try(local.argocd.lint, null)
+
+  dynamic "postrender" {
+    for_each = length(try(local.argocd.postrender, {})) > 0 ? [local.argocd.postrender] : []
+
+    content {
+      binary_path = postrender.value.binary_path
+      args        = try(postrender.value.args, null)
+    }
+  }
+
+  dynamic "set" {
+    for_each = try(local.argocd.set, [])
+
+    content {
+      name  = set.value.name
+      value = set.value.value
+      type  = try(set.value.type, null)
+    }
+  }
+
+  dynamic "set_sensitive" {
+    for_each = try(local.argocd.set_sensitive, [])
+
+    content {
+      name  = set_sensitive.value.name
+      value = set_sensitive.value.value
+      type  = try(set_sensitive.value.type, null)
+    }
+  }
+  depends_on = [kubernetes_secret.git_secrets]
+}
+
+resource "kubernetes_secret_v1" "cluster" {
+  metadata {
+    name        = local.argocd.name
+    namespace   = local.argocd.namespace
+    annotations = local.argocd_annotations
+    labels      = local.argocd_labels
+  }
+  data = local.stringData
+
+  depends_on = [helm_release.argocd]
+}
+
+resource "helm_release" "bootstrap" {
+  for_each = local.argocd_apps
+
+  name      = each.key
+  namespace = try(local.argocd.namespace, "argocd")
+  chart     = "${path.module}/../../charts/resources"
+  version   = "1.0.0"
+
+  values = [
+    <<-EOT
+    resources:
+      - ${indent(4, each.value)}
+    EOT
+  ]
+
+  depends_on = [resource.kubernetes_secret_v1.cluster]
 }

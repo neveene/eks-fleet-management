@@ -128,6 +128,44 @@ locals {
     Blueprint  = local.cluster_name
     GithubRepo = "github.com/gitops-bridge-dev/gitops-bridge"
   }
+
+  argocd = {
+    name             = "argocd"
+    namespace        = local.argocd_namespace
+    chart_version    = "7.7.8"
+    values           = [file("${path.module}/argocd-initial-values.yaml")]
+    timeout          = 600
+    create_namespace = false
+    cluster_name = module.eks.cluster_name
+  }
+
+  stringData = {
+    name   = local.argocd.cluster_name
+    server = try(local.argocd.server, "https://kubernetes.default.svc")
+    config = <<-EOT
+    {
+      "tlsClientConfig": {
+        "insecure": false
+      }
+    }
+  EOT
+    }
+
+  argocd_labels = merge({
+    cluster_name                     = local.argocd.cluster_name
+    environment                      = local.environment
+    enable_argocd                    = true
+    "argocd.argoproj.io/secret-type" = "cluster"
+    },
+    try(local.addons, {})
+  )
+  argocd_annotations = merge(
+    {
+      cluster_name = local.argocd.cluster_name
+      environment  = local.environment
+    },
+    try(local.addons_metadata, {})
+  )
 }
 
 
