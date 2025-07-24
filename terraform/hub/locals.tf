@@ -141,7 +141,7 @@ locals {
 
   stringData = {
     name   = local.argocd.cluster_name
-    server = try(local.argocd.server, "https://kubernetes.default.svc")
+    server = "https://kubernetes.default.svc"
     config = <<-EOT
     {
       "tlsClientConfig": {
