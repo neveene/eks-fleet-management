@@ -189,6 +189,10 @@ resource "kubernetes_secret_v1" "cluster" {
   }
   data = local.stringData
 
+  lifecycle {
+    ignore_changes = [metadata]
+  }
+
   depends_on = [helm_release.argocd]
 }
 
